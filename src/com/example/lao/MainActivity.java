@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
@@ -87,6 +88,7 @@ public class MainActivity extends Activity {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					 try {
+						 Log.e("click","ccccccccccc");
 						 localProcess = Runtime.getRuntime().exec("su");
 						DataOutputStream localDataOutputStream = new DataOutputStream(localProcess.getOutputStream());
 		                localDataOutputStream.writeBytes("input keyevent 4\n");
@@ -110,15 +112,15 @@ public class MainActivity extends Activity {
 	                   lastY = (int) event.getRawY();  
 	                   paramX = params.x;  
 	                   paramY = params.y;  
-	                   break;  
+	                  break;
 	               case MotionEvent.ACTION_MOVE: 
 	            	   btn_floatView.setBackgroundResource(R.drawable.ic_launcher);
 	                   int dx = (int) event.getRawX() - lastX;  
 	                   int dy = (int) event.getRawY() - lastY;  
 	                   	  params.x = paramX + dx;  
 		                   params.y = paramY + dy;
-	                      wm.updateViewLayout(btn_floatView, params);  
-	                   break;  
+		                   wm.updateViewLayout(btn_floatView, params);
+		                   break;
 	               case MotionEvent.ACTION_UP:
 	            	   btn_floatView.setBackgroundResource(R.drawable.tou);
 	            	   int x=(int) event.getRawX();
@@ -130,12 +132,25 @@ public class MainActivity extends Activity {
 	            		   params.x = width;  
 		                   params.y =y-70;
 	            	   }
-	            	   wm.updateViewLayout(btn_floatView, params); 
-	            	   break;
+	            	   if(Math.abs(x-lastX)<5&&Math.abs(y-lastY)<5){
+	            		   wm.updateViewLayout(btn_floatView, params);
+	            		   return false;
+	            	   }else{
+	            		   wm.updateViewLayout(btn_floatView, params);
+	            		   return true;
+	            	   }
 	               }  
 	               return false;  
 	           }  
 	       });  
+	       btn_floatView.setOnLongClickListener(new OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View v) {
+				// TODO Auto-generated method stub
+				return true;
+			}
+		});;
 	         
 	       wm.addView(btn_floatView, params);  
 	}
